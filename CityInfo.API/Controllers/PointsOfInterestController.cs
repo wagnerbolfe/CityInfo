@@ -9,7 +9,8 @@ namespace CityInfo.API.Controllers
 {
     [ApiController]
     [Authorize(Policy = "MustBeFromCaxias")]
-    [Route("api/cities/{cityId}/pointsofinterest")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/cities/{cityId}/pointsofinterest")]
     public class PointsOfInterestController : ControllerBase
     {
         private readonly ILogger<PointsOfInterestController> _logger;
@@ -27,6 +28,9 @@ namespace CityInfo.API.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<IEnumerable<PointOfInterestDto>>> GetPointsOfInterest(int cityId)
         {
             if (!await _cityInfoRepository.CityExistsAsync(cityId))
@@ -41,6 +45,9 @@ namespace CityInfo.API.Controllers
         }
 
         [HttpGet("{pointofinterestid}", Name = "GetPointOfInterest")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<PointOfInterestDto>> GetPointOfInterest(int cityId, int pointOfInterestId)
         {
             if (!await _cityInfoRepository.CityExistsAsync(cityId))
